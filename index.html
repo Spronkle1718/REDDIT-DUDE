@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VCR Text Generator</title>
+  <style>
+    @font-face {
+      font-family: 'VCR OSD Mono';
+      src: url('VCR_OSD_MONO.ttf') format('truetype');
+    }
+
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'VCR OSD Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2em;
+    }
+
+    h1 {
+      margin-bottom: 1em;
+      font-size: 2em;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      margin-bottom: 2em;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    input[type="text"], input[type="number"], input[type="color"] {
+      padding: 0.5em;
+      font-size: 1em;
+      font-family: inherit;
+      border: none;
+      border-radius: 4px;
+      background-color: #222;
+      color: #fff;
+    }
+
+    button {
+      padding: 0.7em;
+      font-size: 1em;
+      font-family: inherit;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #666;
+    }
+
+    #output {
+      margin-top: 2em;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .generated-text {
+      font-family: 'VCR OSD Mono', monospace;
+    }
+
+    .copy-btn {
+      margin-top: 1em;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 0.5em;
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .copy-btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>🕹️ VCR Text Generator</h1>
+
+  <div class="controls">
+    <input type="text" id="inputText" placeholder="Type your text here..." />
+    <label>
+      Font Size (px):
+      <input type="number" id="fontSize" value="24" min="10" max="100" />
+    </label>
+    <label>
+      Text Color:
+      <input type="color" id="textColor" value="#00ffcc" />
+    </label>
+    <button onclick="generateText()">Generate</button>
+  </div>
+
+  <div id="output"></div>
+
+  <script>
+    function generateText() {
+      const text = document.getElementById('inputText').value;
+      const fontSize = document.getElementById('fontSize').value;
+      const color = document.getElementById('textColor').value;
+
+      const output = document.getElementById('output');
+      const escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+      output.innerHTML = `
+        <div class="generated-text" style="font-size:${fontSize}px; color:${color};">
+          ${escapedText}
+        </div>
+        <button class="copy-btn" onclick="copyText()">Copy to Clipboard</button>
+      `;
+    }
+
+    function copyText() {
+      const textElement = document.querySelector('.generated-text');
+      const range = document.createRange();
+      range.selectNodeContents(textElement);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      try {
+        document.execCommand('copy');
+        alert('Text copied to clipboard!');
+      } catch (err) {
+        alert('Failed to copy text.');
+      }
+
+      selection.removeAllRanges();
+    }
+  </script>
+</body>
+</html>
